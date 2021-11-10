@@ -1,2 +1,9 @@
+spring:
+  application:
+    name: pica-location
 server:
   port: 5003
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
