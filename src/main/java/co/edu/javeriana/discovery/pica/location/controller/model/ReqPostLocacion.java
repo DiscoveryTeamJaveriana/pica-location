@@ -8,8 +8,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @Data
 public class ReqPostLocacion   {
-  @JsonProperty("Codigo")
-  private String codigo = null;
 
   @JsonProperty("Nombre")
   private String nombre = null;

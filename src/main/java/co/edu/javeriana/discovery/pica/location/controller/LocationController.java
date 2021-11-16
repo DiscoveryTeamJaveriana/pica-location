@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -52,10 +52,10 @@ public class LocationController {
     }
 
     @GetMapping("/Locaciones")
-    public ResponseEntity< ArrayList<RespGetLocacion>> getLocaciones(@RequestHeader(value=XRQUID) String xRqUID ) throws JsonProcessingException {
+    public ResponseEntity< List<RespGetLocacion>> getLocaciones(@RequestHeader(value=XRQUID) String xRqUID ) throws JsonProcessingException {
         log.info("Get Locaciones for RqUID {}", xRqUID);
         LocationController.this.tracer.currentSpan().tag(RQUID,xRqUID);
-        ArrayList<RespGetLocacion> response = locationService.getLocaciones(xRqUID);
+        List<RespGetLocacion> response = locationService.getLocaciones(xRqUID);
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(response);
         LocationController.this.tracer.currentSpan().tag(RESPONSE,json);

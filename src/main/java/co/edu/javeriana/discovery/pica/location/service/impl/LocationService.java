@@ -2,62 +2,46 @@ package co.edu.javeriana.discovery.pica.location.service.impl;
 
 import co.edu.javeriana.discovery.pica.location.controller.model.ReqPostLocacion;
 import co.edu.javeriana.discovery.pica.location.controller.model.RespGetLocacion;
+import co.edu.javeriana.discovery.pica.location.mapper.LocationMapper;
+import co.edu.javeriana.discovery.pica.location.repository.LocationRepository;
+import co.edu.javeriana.discovery.pica.location.repository.model.Location;
 import co.edu.javeriana.discovery.pica.location.service.ILocationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LocationService implements ILocationService {
+
+    private final LocationRepository locationRepository;
+
     @Override
     public void postLocacion(ReqPostLocacion request, String rquid) {
-        log.info("Panic implement me !");
+
+        Location location = LocationMapper.mapReqPostLocacionToLocation(request);
+        locationRepository.save(location);
 
     }
 
     @Override
-    public ArrayList<RespGetLocacion> getLocaciones(String rquid) {
-        log.info("Panic implement me !");
-        ArrayList<RespGetLocacion> respGetLocacions = new ArrayList<RespGetLocacion>();
-        RespGetLocacion respGetLocacion = new RespGetLocacion();
-        respGetLocacion.setCodigo("1234");
-        respGetLocacion.setNombre("Mauro");
-        respGetLocacion.setDireccion("Calle 123");
-        respGetLocacion.setBarrio("Pradera Norte");
-        respGetLocacion.setSector("Norte");
-        respGetLocacion.setRepresentante("Mauro");
-        respGetLocacion.setCorreo("mauro@gmail.com");
-        respGetLocacion.setTelefono("310310310");
+    public List<RespGetLocacion> getLocaciones(String rquid) {
 
-        RespGetLocacion respGetLocacion2 = new RespGetLocacion();
-        respGetLocacion2.setCodigo("1234");
-        respGetLocacion2.setNombre("Mauro");
-        respGetLocacion2.setDireccion("Calle 123");
-        respGetLocacion2.setBarrio("Pradera Norte");
-        respGetLocacion2.setSector("Norte");
-        respGetLocacion2.setRepresentante("Mauro");
-        respGetLocacion2.setCorreo("mauro@gmail.com");
-        respGetLocacion2.setTelefono("310310310");
-
-        respGetLocacions.add(respGetLocacion);
-        respGetLocacions.add(respGetLocacion2);
-        return respGetLocacions;
+        return locationRepository.findAll().stream()
+                .map(LocationMapper::mapLocationToResptGetLocacion)
+                .collect(Collectors.toList());
     }
 
     @Override
     public RespGetLocacion getLocacion(String codigo, String rquid) {
-        log.info("Panic implement me !");
-        RespGetLocacion respGetLocacion = new RespGetLocacion();
-        respGetLocacion.setCodigo("1234");
-        respGetLocacion.setNombre("Mauro");
-        respGetLocacion.setDireccion("Calle 123");
-        respGetLocacion.setBarrio("Pradera Norte");
-        respGetLocacion.setSector("Norte");
-        respGetLocacion.setRepresentante("Mauro");
-        respGetLocacion.setCorreo("mauro@gmail.com");
-        respGetLocacion.setTelefono("310310310");
-        return respGetLocacion;
+
+        return LocationMapper
+                .mapLocationToResptGetLocacion(locationRepository.findById(codigo)
+                        .orElseThrow(() -> new RuntimeException("No Location")));
+        //TODO: Add ControllerAdvice for exception control
     }
 }
