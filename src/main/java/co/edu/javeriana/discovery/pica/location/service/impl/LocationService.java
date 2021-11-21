@@ -24,16 +24,24 @@ public class LocationService implements ILocationService {
     public void postLocacion(ReqPostLocacion request, String rquid) {
 
         Location location = LocationMapper.mapReqPostLocacionToLocation(request);
-        locationRepository.save(location);
-
+        try {
+            locationRepository.save(location);
+        }catch (Exception e) {
+            log.info("Error al crear locacion");
+            throw e;
+        }
     }
 
     @Override
     public List<RespGetLocacion> getLocaciones(String rquid) {
-
-        return locationRepository.findAll().stream()
-                .map(LocationMapper::mapLocationToResptGetLocacion)
-                .collect(Collectors.toList());
+        try {
+            return locationRepository.findAll().stream()
+                    .map(LocationMapper::mapLocationToResptGetLocacion)
+                    .collect(Collectors.toList());
+        }catch (Exception e) {
+        log.info("Error al consultar locaciones");
+        throw e;
+    }
     }
 
     @Override
